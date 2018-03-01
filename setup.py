@@ -27,7 +27,7 @@ def set_logging_path(path):
                 if handler == 'console':
                     pass
                 else:
-                    if hasattr(sys, 'real_prefix'):
+                    if hasattr(sys, 'real_prefix') or hasattr(sys, 'base_prefix'):
                         value['filename'] = (os.path.join
                                              (sys.prefix,
                                               'var/logs/jsnapy/jsnapy.log'))
@@ -52,7 +52,7 @@ class OverrideInstall(install):
             # hasattr(sys,'real_prefix') checks whether the
             # user is working in python virtual environment
             # --------------------------------
-            if hasattr(sys, 'real_prefix'):
+            if hasattr(sys, 'real_prefix') or hasattr(sys, 'base_prefix'):
                 self.install_data = os.path.join(sys.prefix, 'etc',
                                                  'jsnapy')
             elif 'win32' in sys.platform:
@@ -65,7 +65,7 @@ class OverrideInstall(install):
         mode = 0o777
         install.run(self)
 
-        if 'win32' not in sys.platform and not hasattr(sys, 'real_prefix'):
+        if 'win32' not in sys.platform and not hasattr(sys, 'real_prefix') and not hasattr(sys, 'base_prefix'):
             dir_mode = 0o755
             file_mode = 0o644
             os.chmod(dir_path, dir_mode)
@@ -96,7 +96,7 @@ class OverrideInstall(install):
             config.set('DEFAULT', 'test_file_path',
                        os.path.join(dir_path, 'testfiles'))
 
-            if hasattr(sys, 'real_prefix'):
+            if hasattr(sys, 'real_prefix') or hasattr(sys, 'base_prefix'):
                 default_config_location = os.path.join(sys.prefix,
                                                        'etc',
                                                        'jsnapy', 'jsnapy.cfg')
@@ -124,7 +124,7 @@ class OverrideInstall(install):
                 raise Exception('jsnapy.cfg not found at ' +
                                 default_config_location)
 
-            if hasattr(sys, 'real_prefix'):
+            if hasattr(sys, 'real_prefix') or hasattr(sys, 'base_prefix'):
                 path = os.path.join(sys.prefix, 'etc', 'jsnapy', 'logging.yml')
                 set_logging_path(path)
             elif 'win32' in sys.platform:
@@ -149,7 +149,7 @@ os_data_file = []
 # Specifying only 'samples' means 'install_data Path'/samples
 # ----------------------------
 
-if hasattr(sys, 'real_prefix'):
+if hasattr(sys, 'real_prefix') or hasattr(sys, 'base_prefix'):
     os_data_file = [('.', ['lib/jnpr/jsnapy/logging.yml']),
                     ('../../var/logs/jsnapy', log_files),
                     ('.', ['lib/jnpr/jsnapy/jsnapy.cfg']),

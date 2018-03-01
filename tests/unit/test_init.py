@@ -36,7 +36,7 @@ class TestCheck(unittest.TestCase):
 
     @patch('os.path.isfile')
     def test_config_location_etc(self, mock_is_file):
-        if hasattr(sys, 'real_prefix'):
+        if hasattr(sys, 'real_prefix') or hasattr(sys, 'base_prefix'):
             mock_is_file.side_effect = lambda arg: arg in [os.path.join(sys.prefix, 'etc',
                                                                         'jsnapy',
                                                       'jsnapy.cfg')]
